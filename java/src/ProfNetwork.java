@@ -1,5 +1,4 @@
-/*
- * Template JAVA User Interface
+te JAVA User Interface
  * =============================
  *
  * Database Management Systems
@@ -267,17 +266,24 @@ public class ProfNetwork {
               while(usermenu) {
                 System.out.println("MAIN MENU");
                 System.out.println("---------");
-                System.out.println("1. Goto Friend List");
+                System.out.println("1. Go to Friend List");
                 System.out.println("2. Update Profile");
                 System.out.println("3. Write a new message");
-                System.out.println("4. Send Friend Request");
-                System.out.println(".........................");
+                System.out.println("4. Send Connection Request");
+                System.out.println("5. Search People");
+                System.out.println("6. Change Password");
+                System.out.println("7. View Connection Requests");
+                System.out.println("8. View Messages");
                 System.out.println("9. Log out");
                 switch (readChoice()){
                    case 1: FriendList(esql); break;
                    case 2: UpdateProfile(esql); break;
                    case 3: NewMessage(esql); break;
                    case 4: SendRequest(esql); break;
+                   case 5: SearchPeople(esql); break;
+                   case 6: ChangePassword(esql); break;
+                   case 7: ViewRequests(esql); break;
+                   case 8: ViewMessages(esql); break;
                    case 9: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
                 }
@@ -373,16 +379,45 @@ public class ProfNetwork {
    }//end
 
 // Rest of the functions definition go in here
+//
+/*
+ *
+ *SearchPeople(esql); break;
+                   case 6: ChangePassword(esql); break;
+                   case 7: ViewRequests(esql); break;
+                   case 8: ViewMessages(esql); break;
+                   case 9: usermenu = false; break;
+ */
     public static void FriendList(ProfNetwork esql){
+        //TODO: ALLOW USER TO BROWSE LIST OF FRIENDS
 
     }
     public static void UpdateProfile(ProfNetwork esql){
-
+        //TODO: ALLOW USER TO CHANGE NON IMPORTANT PROFILE DETAILS
+        //TODO: ALLOW USER TO UPDATE PROFILE        
     }
     public static void NewMessage(ProfNetwork esql){
-
+        System.out.println("\tWho would you like to message");
+        String User = in.readline
+        System.out.println("\tEnter your message here:");
+        String Message = in.readline();
+        System.out.println("\tSending message ...")
+        String query = String.format("")
+                   
     }
     public static void SendRequest(ProfNetwork esql){
+           
+    }
+    public static void SearchPeople(ProfNetwork esql){
+    
+    }
+    public static void ChangePassword(ProfNetwork esql){
 
+    }
+    public static void ViewRequests(ProfNetwork esql){
+           
+    }
+    public static void ViewMessages(ProfNetwork esql)(){
+        
     }
 }//end ProfNetwork
