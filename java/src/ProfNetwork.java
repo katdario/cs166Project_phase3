@@ -1,4 +1,4 @@
-te JAVA User Interface
+/*te JAVA User Interface
  * =============================
  *
  * Database Management Systems
@@ -287,7 +287,7 @@ public class ProfNetwork {
 //                    case 5: ChangePassword(esql, authorisedUser); break;
 		//case 9: usermenu = false; break;
                    case 5: SearchPeople(esql); break;
-                   case 6: ChangePassword(esql, authorizedUser); break;
+                   case 6: ChangePassword(esql, authorisedUser); break;
                    case 7: ViewRequests(esql); break;
                    case 8: ViewMessages(esql); break;
                    case 9: usermenu = false; break;
@@ -345,15 +345,19 @@ public class ProfNetwork {
     **/
    public static void CreateUser(ProfNetwork esql){
       try{
-         System.out.print("\tEnter user login: ");
+         System.out.print("\tEnter user login/id: ");
          String login = in.readLine();
          System.out.print("\tEnter user password: ");
          String password = in.readLine();
          System.out.print("\tEnter user email: ");
          String email = in.readLine();
+	System.out.print("\tEnter user name: ");
+	String name = in.readLine();
+	System.out.print("\tEnter user\'s birthday [MM/DD/YY]: ");
+	String dob = in.readLine();
 
          //Creating empty contact\block lists for a user
-         String query = String.format("INSERT INTO USR (userId, password, email, contact_list) VALUES ('%s','%s','%s')", login, password, email);
+         String query = String.format("INSERT INTO USR (userId, password, email, name, dateOfBirth) VALUES ('%s','%s','%s','%s','%s')", login, password, email, name, dob);
 
          esql.executeUpdate(query);
          System.out.println ("User successfully created!");
@@ -416,13 +420,17 @@ public class ProfNetwork {
         //TODO: ALLOW USER TO UPDATE PROFILE        
     }
     public static void NewMessage(ProfNetwork esql){
-        System.out.println("\tWho would you like to message");
-        String User = in.readline
-        System.out.println("\tEnter your message here:");
-        String Message = in.readline();
-        System.out.println("\tSending message ...")
-        String query = String.format("")
-                   
+        try{
+		System.out.println("\tWho would you like to message: ");
+        	String userid = in.readLine();
+        	System.out.println("\tEnter your message here: ");
+        	String msg_content = in.readLine();
+        	System.out.println("\tSending message ...");
+        	String query = String.format("");
+     	}
+	catch(Exception e){
+         System.err.println (e.getMessage ());
+      }              
     }
     public static void SendRequest(ProfNetwork esql){
            
@@ -432,12 +440,12 @@ public class ProfNetwork {
     }
     public static void ChangePassword(ProfNetwork esql, String authorizedUser){
                 try{
-                        System.out.print("\tEnter current password: ");
-                        String oldPass = in.readLine();
                         System.out.print("\tEnter new password: ");
                         String newPass = in.readLine();
 
-                        String query = String.format("SELECT userId FROM USR WHERE password = '%s'", oldPass)
+                        String query = String.format("UPDATE USR SET password = '%s' WHERE userId = '%s'", newPass,authorizedUser);
+						esql.executeQuery(query);
+						System.out.println("Password Updated!");
                 }
                 catch(Exception e){
 
