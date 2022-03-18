@@ -408,10 +408,8 @@ public class ProfNetwork {
                    case 8: ViewMessages(esql); break;
                    case 9: usermenu = false; break;
  */
->>>>>>> 89af3282e889743c3bd3afa4c3f77afd4ce8da71
     public static void FriendList(ProfNetwork esql){
         //TODO: ALLOW USER TO BROWSE LIST OF FRIENDS
-
     }
     public static void UpdateProfile(ProfNetwork esql){
         //TODO: ALLOW USER TO CHANGE NON IMPORTANT PROFILE DETAILS
@@ -433,14 +431,13 @@ public class ProfNetwork {
     
     }
     public static void ChangePassword(ProfNetwork esql){
-
     }
 
     public static void ViewRequests(ProfNetwork esql){
            
     }
-    public static void ViewMessages(ProfNetwork esql)(){
-        
-    }
->>>>>>> 89af3282e889743c3bd3afa4c3f77afd4ce8da71
+    public static void ViewMessages(ProfNetwork esql){
+    }    
+    
+
 }//end ProfNetwork
