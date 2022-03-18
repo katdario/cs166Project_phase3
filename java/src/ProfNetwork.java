@@ -284,10 +284,10 @@ public class ProfNetwork {
                    case 2: UpdateProfile(esql); break;
                    case 3: NewMessage(esql); break;
                    case 4: SendRequest(esql); break;
-                   case 5: ChangePassword(esql, authorisedUser); break;
+//                    case 5: ChangePassword(esql, authorisedUser); break;
 		//case 9: usermenu = false; break;
                    case 5: SearchPeople(esql); break;
-                   case 6: ChangePassword(esql); break;
+                   case 6: ChangePassword(esql, authorizedUser); break;
                    case 7: ViewRequests(esql); break;
                    case 8: ViewMessages(esql); break;
                    case 9: usermenu = false; break;
@@ -384,20 +384,20 @@ public class ProfNetwork {
       }
    }//end
 
-// Rest of the functions definition go in here
-    public static void ChangePassword(ProfNetwork esql){
-		try{
-			System.out.print("\tEnter current password: ");
-			String oldPass = in.readLine();
-			System.out.print("\tEnter new password: ");
-			String newPass = in.readLine();
+// // Rest of the functions definition go in here
+//     public static void ChangePassword(ProfNetwork esql){
+// 		try{
+// 			System.out.print("\tEnter current password: ");
+// 			String oldPass = in.readLine();
+// 			System.out.print("\tEnter new password: ");
+// 			String newPass = in.readLine();
 			
-			String query = String.format("SELECT userId FROM USR WHERE password = '%s'", oldPass)
-		}
-		catch(Exception e){
+// 			String query = String.format("SELECT userId FROM USR WHERE password = '%s'", oldPass)
+// 		}
+// 		catch(Exception e){
 
-		}
-    }
+// 		}
+//     }
 
 //
 /*
@@ -430,7 +430,7 @@ public class ProfNetwork {
     public static void SearchPeople(ProfNetwork esql){
     
     }
-    public static void ChangePassword(ProfNetwork esql){
+    public static void ChangePassword(ProfNetwork esql, String authorizedUser){
                 try{
                         System.out.print("\tEnter current password: ");
                         String oldPass = in.readLine();
