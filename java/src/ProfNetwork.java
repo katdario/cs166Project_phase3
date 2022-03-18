@@ -269,9 +269,7 @@ public class ProfNetwork {
                 System.out.println("1. Go to Friend List");
                 System.out.println("2. Update Profile");
                 System.out.println("3. Write a new message");
-                System.out.println("4. Send Friend Request");
-                System.out.println("5. Change Password");
-				
+                System.out.println("4. Send Friend Request");		
 		System.out.println(".........................");
                 System.out.println("4. Send Connection Request");
                 System.out.println("5. Search People");
@@ -284,8 +282,7 @@ public class ProfNetwork {
                    case 2: UpdateProfile(esql); break;
                    case 3: NewMessage(esql); break;
                    case 4: SendRequest(esql); break;
-//                    case 5: ChangePassword(esql, authorisedUser); break;
-		//case 9: usermenu = false; break;
+//                 ====================================
                    case 5: SearchPeople(esql); break;
                    case 6: ChangePassword(esql, authorisedUser); break;
                    case 7: ViewRequests(esql); break;
