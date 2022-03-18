@@ -20,17 +20,17 @@ CREATE TABLE WORK_EXPR(
         location char(50),
         startDate date,
         endDate date,
-        PRIMARY KEY(userId,company,role,startDate)
+        PRIMARY KEY(userId,company,role,startDate),
 	FOREIGN KEY (userId) REFERENCES USR ON DELETE CASCADE);
 
 CREATE TABLE EDUCATIONAL_DETAILS(
         userId char(30) NOT NULL,
-        instituitionName char(50) NOT NULL,
+        institutionName char(50) NOT NULL,
         major char(50) NOT NULL,
         degree char(50) NOT NULL,
         startdate date,
         enddate date,
-        PRIMARY KEY(userId,major,degree)
+        PRIMARY KEY(userId,major,degree),
 	FOREIGN KEY (userId) REFERENCES USR ON DELETE CASCADE);
 
 CREATE TABLE MESSAGE(
@@ -41,7 +41,7 @@ CREATE TABLE MESSAGE(
         sendTime timestamp,
         deleteStatus integer,
         status char(30) NOT NULL,
-        PRIMARY KEY(msgId)
+        PRIMARY KEY(msgId),
 	FOREIGN KEY (senderId) REFERENCES USR(userId) ON DELETE NO ACTION,
 	FOREIGN KEY (receiverId) REFERENCES USR(userId) ON DELETE NO ACTION);
 
@@ -49,6 +49,6 @@ CREATE TABLE CONNECTION_USR(
         userId char(30) NOT NULL,
         connectionId char(30) NOT NULL,
         status char(30) NOT NULL,
-        PRIMARY KEY(userId,connectionId)
-	FOREIGN KEY(userId) REFERENCES USR ON DELETE CASCADE,
+        PRIMARY KEY(userId,connectionId),
+	FOREIGN KEY(userId) REFERENCES USR(userId) ON DELETE CASCADE,
 	FOREIGN KEY(connectionId) REFERENCES USR(userId) ON DELETE CASCADE);

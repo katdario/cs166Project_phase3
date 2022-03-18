@@ -6,10 +6,10 @@ COPY USR (
         dateOfBirth
 )
 FROM 'USR.csv'
-DELIMTER ',' CSV HEADER
+DELIMITER ',' CSV HEADER
 ;
 
-COPY Work_Ex (
+COPY WORK_EXPR (
         userId,
         company,
         role,
@@ -17,38 +17,41 @@ COPY Work_Ex (
         startDate,
         endDate
 )
-FROM 'Work_Ex.csv'
-DELIMTER ',' CSV HEADER
+FROM 'work_ex.csv'
+DELIMITER ',' CSV HEADER
 ;
 
-COPY Edu_Det(
-        userid,
+COPY EDUCATIONAL_DETAILS(
+        userId,
         institutionName,
         major,
         degree,
         startdate,
         enddate
 )
-FROM 'Edu_Det.csv'
-DELIMITER "," CSV HEADER
+FROM 'edu_det.csv'
+DELIMITER ',' CSV HEADER
+;
 
-COPY Message(
-        messageid,
-        senderid,
-        receiverid,
+COPY MESSAGE(
+        msgId,
+        senderId,
+        receiverId,
         contents,
         sendTime,
         deleteStatus,
         status
 
 )
-FROM 'Message.csv'
-DELIMITER "," CSV HEADER
+FROM 'message.csv'
+DELIMITER ',' CSV HEADER
+;
 
-COPY Connection(
+COPY CONNECTION_USR(
         userid,
         connectionid,
         status
 )
-FROM 'Connection.csv'
-DELIMITER "," CSV HEADER
+FROM 'connection.csv'
+DELIMITER ',' CSV HEADER
+;
