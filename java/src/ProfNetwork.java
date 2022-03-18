@@ -271,14 +271,17 @@ public class ProfNetwork {
                 System.out.println("2. Update Profile");
                 System.out.println("3. Write a new message");
                 System.out.println("4. Send Friend Request");
-                System.out.println(".........................");
+                System.out.println("5. Change Password");
+				
+				System.out.println(".........................");
                 System.out.println("9. Log out");
                 switch (readChoice()){
                    case 1: FriendList(esql); break;
                    case 2: UpdateProfile(esql); break;
                    case 3: NewMessage(esql); break;
                    case 4: SendRequest(esql); break;
-                   case 9: usermenu = false; break;
+                   case 5: ChangePassword(esql, authorisedUser); break;
+					case 9: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
                 }
               }
@@ -373,6 +376,20 @@ public class ProfNetwork {
    }//end
 
 // Rest of the functions definition go in here
+    public static void ChangePassword(ProfNetwork esql){
+		try{
+			System.out.print("\tEnter current password: ");
+			String oldPass = in.readLine();
+			System.out.print("\tEnter new password: ");
+			String newPass = in.readLine();
+			
+			String query = String.format("SELECT userId FROM USR WHERE password = '%s'", oldPass)
+		}
+		catch(Exception e){
+
+		}
+    }
+
     public static void FriendList(ProfNetwork esql){
 
     }
