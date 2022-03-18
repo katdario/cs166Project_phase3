@@ -431,6 +431,17 @@ public class ProfNetwork {
     
     }
     public static void ChangePassword(ProfNetwork esql){
+                try{
+                        System.out.print("\tEnter current password: ");
+                        String oldPass = in.readLine();
+                        System.out.print("\tEnter new password: ");
+                        String newPass = in.readLine();
+
+                        String query = String.format("SELECT userId FROM USR WHERE password = '%s'", oldPass)
+                }
+                catch(Exception e){
+
+                }
     }
 
     public static void ViewRequests(ProfNetwork esql){
