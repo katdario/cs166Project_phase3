@@ -254,7 +254,11 @@ public class ProfNetwork {
          esql = new ProfNetwork (dbname, dbport, user, "");
 
          boolean keepon = true;
-         while(keepon) {
+	String query = String.format("SELECT * FROM MESSAGE");
+        MESSAGES_SIZE = esql.executeQuery(query);
+        //MESSAGES_SIZE = esql.executeQueryAndPrintResult(query);
+	System.out.println("messages size = " + MESSAGES_SIZE); 
+	while(keepon) {
             // These are sample SQL statements
             System.out.println("MAIN MENU");
             System.out.println("---------");
@@ -295,7 +299,7 @@ public class ProfNetwork {
                    case 5: SearchPeople(esql); break;
                    case 6: ChangePassword(esql, authorisedUser); break;
                    case 7: ViewRequests(esql); break;
-                   case 8: ViewMessages(esql); break;
+                   case 8: ViewMessages(esql, authorisedUser); break;
                    case 9: usermenu = false; break;
                    default : System.out.println("Unrecognized choice!"); break;
                 }
@@ -386,8 +390,9 @@ public class ProfNetwork {
          String query = String.format("SELECT * FROM USR WHERE userId = '%s' AND password = '%s'", login, password);
          int userNum = esql.executeQuery(query);
          if (userNum > 0){
-                query = String.format("SELECT * FROM MESSAGE WHERE senderId = '%s' OR receiverId = '%s'", login, login);
-		MESSAGES_SIZE = esql.executeQuery(query);
+                //query = String.format("SELECT * FROM MESSAGE");
+		//MESSAGES_SIZE = esql.executeQuery(query);
+		//System.out.println("messages size = " + MESSAGES_SIZE);
 		return login;
          }
 	System.out.println("Invalid credentials.");
@@ -429,20 +434,28 @@ public class ProfNetwork {
         try{
 		System.out.print("\tWho would you like to message?\n\tEnter receiver's user id: ");
         	String rec_id = in.readLine();
+//		if(rec_id.lastIndexOf("\n") != -1)
+//			rec_id = rec_id.substring(0, rec_id.length()-1);
         	System.out.print("\tEnter your message here: \n\t");
         	String msg_content = in.readLine();
 		System.out.print("\tWould you like to send now? Y/N: ");
 		String want_send = in.readLine();
 		String query;
+		String del_stat = "3";
+		String deliv_stat = "Delivered";
+		String draft_stat = "Draft";
 		if(want_send.equals("Y")){
         		System.out.println("\tSending message ...");
-        		query = String.format("INSERT INTO MESSAGE ( msgId,senderId, receiverId,contents, sendTime, deleteStatus, status) VALUES ('%s', '%s', '%s', '%s', '%s', '3', 'Delivered')", MESSAGES_SIZE++, userlogin, rec_id, msg_content, new Timestamp(System.currentTimeMillis()) );
+        		query = String.format("INSERT INTO MESSAGE ( senderId, receiverId,contents, sendTime, deleteStatus, status) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", userlogin, rec_id.trim(), msg_content.trim(), new Timestamp(System.currentTimeMillis()) , del_stat, deliv_stat);
 		}
 		else{
 			System.out.println("\tSaving message as Draft");
-			query = String.format("INSERT INTO MESSAGE ( msgId,senderId, receiverId,contents, sendTime, deleteStatus, status) VALUES ('%s', '%s', '%s', '%s', '%s', '3', 'Draft')", MESSAGES_SIZE++, userlogin, rec_id, msg_content, new Timestamp(System.currentTimeMillis()) );
+			query = String.format("INSERT INTO MESSAGE ( senderId, receiverId, contents, sendTime, deleteStatus, status) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", userlogin, rec_id.trim(), msg_content.trim(), new Timestamp(System.currentTimeMillis()), del_stat, draft_stat );			
 		}
-		esql.executeQuery(query);
+		//MESSAGES_SIZE++;
+		//esql.update(query);
+		esql.executeUpdate(query);
+		System.out.println("Sent!");
 	}
 
 	catch(Exception e){
@@ -465,15 +478,26 @@ public class ProfNetwork {
 			System.out.println("Password Updated!");
                 }
                 catch(Exception e){
-
+					System.err.println (e.getMessage ());
                 }
     }
 
-    public static void ViewRequests(ProfNetwork esql){
+	public static void ViewRequests(ProfNetwork esql){
            
-    }
-    public static void ViewMessages(ProfNetwork esql){
-    }    
+    	}
+    public static void ViewMessages(ProfNetwork esql, String userid){
+    	try{
+			String query = String.format("SELECT msgId,receiverId,senderId FROM MESSAGE WHERE receiverId = '%s' OR senderId = '%s'", userid.trim(), userid.trim());
+			esql.executeQueryAndPrintResult(query);
+			System.out.print("Which message would you like to open?\n\tPlease enter the msgId: ");
+			String message = in.readLine();
+			query = String.format("SELECT contents FROM MESSAGE WHERE msgId = '%s'", message);
+			esql.executeQueryAndPrintResult(query);
+	}
+		catch(Exception e){
+			System.err.println (e.getMessage ());
+		}
+	}    
     
 
 }//end ProfNetwork
