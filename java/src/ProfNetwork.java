@@ -482,9 +482,33 @@ public class ProfNetwork {
                 }
     }
 
-	public static void ViewRequests(ProfNetwork esql){
-           
-    	}
+	public static void ViewRequests(ProfNetwork esql, String myId){
+    	try{
+			String query = String.format("SELECT userId, status FROM CONNECTION_USR WHERE (connectionId = '%s) AND status = 'Request'", myId, myId);
+			esql.executeQueryAndPrintResult(query);
+			System.out.print("\nWould you like to Accept or Reject a request? [A]ccept, [R]eject, e[X]it: ");
+			String input = in.readLine();
+			String id;
+			if(input.equals("A")){
+				System.out.print("Please enter the user ID you'd like to connect with: ");
+				id = in.readLine();
+				query = String.format("UPDATE CONNECTION_USR SET status = 'Accept' WHERE userId = '%s' AND connectionId = '%s'", id, myId);
+				esql.executeQuery(query);
+				System.out.println("\n\tConnection Accepted!");			
+			}
+			else if(input.equals("R")){
+                System.out.print("Please enter the user ID whose request you'd like to reject: ");
+                id = in.readLine();
+                query = String.format("UPDATE CONNECTION_USR SET status = 'Reject' WHERE userId = '%s' AND connectionId = '%s'", id, myId);  
+                esql.executeQuery(query);
+                System.out.println("\n\tConnection Rejected!");         
+            }
+			
+		}
+		catch(Exception e){
+			System.err.println(e.getMessage() );
+		}       
+    }
     public static void ViewMessages(ProfNetwork esql, String userid){
     	try{
 			String query = String.format("SELECT msgId,receiverId,senderId FROM MESSAGE WHERE receiverId = '%s' OR senderId = '%s'", userid.trim(), userid.trim());
