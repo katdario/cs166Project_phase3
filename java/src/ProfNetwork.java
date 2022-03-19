@@ -1,4 +1,4 @@
-te JAVA User Interface
+VA User Interface
  * =============================
  *
  * Database Management Systems
@@ -269,6 +269,10 @@ public class ProfNetwork {
                 System.out.println("1. Go to Friend List");
                 System.out.println("2. Update Profile");
                 System.out.println("3. Write a new message");
+                System.out.println("4. Send Friend Request");
+                System.out.println("5. Change Password");
+				
+		System.out.println(".........................");
                 System.out.println("4. Send Connection Request");
                 System.out.println("5. Search People");
                 System.out.println("6. Change Password");
@@ -280,6 +284,8 @@ public class ProfNetwork {
                    case 2: UpdateProfile(esql); break;
                    case 3: NewMessage(esql); break;
                    case 4: SendRequest(esql); break;
+                   case 5: ChangePassword(esql, authorisedUser); break;
+		//case 9: usermenu = false; break;
                    case 5: SearchPeople(esql); break;
                    case 6: ChangePassword(esql); break;
                    case 7: ViewRequests(esql); break;
@@ -379,18 +385,35 @@ public class ProfNetwork {
    }//end
 
 // Rest of the functions definition go in here
-//
-/*
- *
- *SearchPeople(esql); break;
-                   case 6: ChangePassword(esql); break;
-                   case 7: ViewRequests(esql); break;
-                   case 8: ViewMessages(esql); break;
-                   case 9: usermenu = false; break;
- */
+    public static void ChangePassword(ProfNetwork esql){
+		try{
+			System.out.print("\tEnter current password: ");
+			String oldPass = in.readLine();
+			System.out.print("\tEnter new password: ");
+			String newPass = in.readLine();
+			
+			String query = String.format("SELECT userId FROM USR WHERE password = '%s'", oldPass)
+		}
+		catch(Exception e){
+
+		}
+    }
     public static void FriendList(ProfNetwork esql){
         //TODO: ALLOW USER TO BROWSE LIST OF FRIENDS
-
+	System.out.print("\tFriends");
+	String query1 = String.format("SELECT U.name FROM CONNECTION_USR C, USR U WHERE C.status = \"Accept\" AND C.userId = U.userId");
+	friendsList = esql.execute(query2);
+	System.out.print(friendsList);
+	System.out.print("\tEnter a friend's name to view their profile");
+	String userName = in.readline();
+	String userId = String.format("SELECT U.userId FROM USR U. CONNECTION_USR WHERE C.status = 'Accept' AND  U.name = '%s'", userName);
+	System.out.print(userName);
+	String company = String.format("SELECT W.company FROM WORK_EXPR WHERE W.userId = '$s'", userId);
+	String role = String.format("SELECT W.role FROM WORK_EXPR WHERE W.userId = '$s'", userId);
+	String location = String.format("SELECT W.location FROM WORK_EXPR WHERE W.userId = '$s'", userId);
+	esql.executeQueryAndPrintResult(role);
+	esql.executeQueryAndPrintResult(company);
+	esql.executeQueryAndPrintResult(location);
     }
     public static void UpdateProfile(ProfNetwork esql){
         //TODO: ALLOW USER TO CHANGE NON IMPORTANT PROFILE DETAILS
@@ -398,7 +421,7 @@ public class ProfNetwork {
     }
     public static void NewMessage(ProfNetwork esql){
         System.out.println("\tWho would you like to message");
-        String User = in.readline
+        String User = in.readline();
         System.out.println("\tEnter your message here:");
         String Message = in.readline();
         System.out.println("\tSending message ...")
@@ -409,10 +432,16 @@ public class ProfNetwork {
            
     }
     public static void SearchPeople(ProfNetwork esql){
-    
-    }
-    public static void ChangePassword(ProfNetwork esql){
-
+        try{
+	  System.out.print("\tEnter a name to search: ");
+	  String userName = in.readLine();
+	  String query = String.format("SELECT name FROM USR WHERE name = '%s'", userName);
+       	  esql.executeQueryAndPrintResult(query);
+	} 
+	catch(Exception e){
+         System.err.println (e.getMessage ());
+         return null;
+		}
     }
     public static void ViewRequests(ProfNetwork esql){
            
@@ -421,3 +450,4 @@ public class ProfNetwork {
         
     }
 }//end ProfNetwork
+
