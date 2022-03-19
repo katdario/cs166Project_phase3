@@ -20,6 +20,10 @@ initdb
 
 sleep 1
 #Start folder
+<<<<<<< HEAD
 export PGPORT=1077
+=======
+export PGPORT=3024
+>>>>>>> 574607db3f29996bf2da29ec8691c85f212a38e4
 pg_ctl -o "-c unix_socket_directories=$PGSOCKETS -p $PGPORT" -D $PGDATA -l $folder/logfile start
 
