@@ -280,8 +280,11 @@ public class ProfNetwork {
               	//String query = String.format("SELECT * FROM MESSAGES WHERE senderId = '%s' OR receiverId = '%s'", authorisedUser, authorisedUser);       
 		//MESSAGES_SIZE = esql.executeQuery(query);
 		while(usermenu) {
-			String query = String.format("SELECT * FROM CONNECTION_USR WHERE (userId = '%s' OR connectionId = '%s') AND status = 'Accept'", authorisedUser, authorisedUser);
-                	num_friends = esql.executeQuery(query);
+			//String query = String.format("SELECT * FROM CONNECTION_USR WHERE (userId = '%s' OR connectionId = '%s') AND status = 'Accept'", authorisedUser, authorisedUser);
+			String query = String.format("SELECT COUNT(*) FROM CONNECTION_USR WHERE (userId = '%s' OR connectionId = '%s') AND status = 'Accept'", authorisedUser, authorisedUser);
+			List<List<String>> num = esql.executeQueryAndReturnResult(query);
+                        num_friends = Integer.parseInt(num.get(0).get(0)) ;
+                	//num_friends = esql.executeQuery(query);
 
 			System.out.println("MAIN MENU");
 	                System.out.println("---------");
@@ -291,7 +294,7 @@ public class ProfNetwork {
 	                System.out.println("3. Write a new message");
 	                //System.out.println("4. Send Friend Request");		
 			System.out.println(".........................");
-			if(num_friends < 5)
+			//if(num_friends < 5)
 		        System.out.println("4. Send Connection Request");
 	                System.out.println("5. Search People");
 	                System.out.println("6. Change Password");
@@ -310,7 +313,7 @@ public class ProfNetwork {
 				System.out.println("You have at least 5 friends. To add more, you must add through your friend's list");
 			break;
 //                 ====================================
-                   case 5: SearchPeople(esql); break;
+                   case 5: SearchPeople(esql, authorisedUser); break;
                    case 6: ChangePassword(esql, authorisedUser); break;
                    case 7: ViewRequests(esql, authorisedUser); break;
                    case 8: ViewMessages(esql, authorisedUser); break;
@@ -527,7 +530,7 @@ public class ProfNetwork {
                                                	case 3:
 							System.out.println("\n\nnumber of friends: " + num_friends); 
 							if(num_friends < 5 || (num_friends >= 5 && conn_level <=3))
-								SendRequest(esql, id);
+								SendRequest(esql, myId);
 							else
 								System.out.println("ERROR. Connection level limit surpassed");
 							break;
@@ -543,6 +546,86 @@ public class ProfNetwork {
             System.err.println(e.getMessage());
         }
 	}
+
+	public static void viewProfileFromSearch(ProfNetwork esql, String id, String myId){
+		try{
+			boolean view=true;
+                        conn_level++;
+                        while(view){
+                                String query = String.format("SELECT * FROM CONNECTION_USR WHERE userId = '%s' AND connectionId = '%s' AND status = 'Accept'",id,myId);
+                                int conn = esql.executeQuery(query);
+                                query = String.format("SELECT * FROM CONNECTION_USR WHERE userId = '%s' AND connectionId = '%s' AND status = 'Accept'",myId,id);
+                                conn += esql.executeQuery(query);
+				if(conn > 0){
+                                        conn_level = 1;
+                                        System.out.println("\n\nPROFILE VIEW\tlevel = " + conn_level + "\n");
+                                        System.out.println("Personal Info:\n----------------");
+                                        query = String.format("SELECT userId,name, dateOfBirth FROM USR WHERE userId = '%s'", id);
+                                        esql.executeQueryAndPrintResult(query);
+                                        System.out.println("\nEducation Details:\n----------------");
+                                        query = String.format("SELECT institutionName,major,degree,startdate,enddate FROM EDUCATIONAL_DETAILS WHERE userId = '%s'",id);
+                                        esql.executeQueryAndPrintResult(query);
+                                        System.out.println("\nWork Experienc:\n----------------");
+                                        query = String.format("SELECT company,role,location,startDate,endDate FROM WORK_EXPR WHERE userId = '%s'",id);
+                                        esql.executeQueryAndPrintResult(query);
+
+                                        System.out.println("\n\tOPTIONS:\n\t-------");
+                                        System.out.println("1. View Friends list\n2. Send Message\n3. Back");
+                                        switch(readChoice()){
+                                                case 1: FriendList(esql, id, myId); break;
+                                                case 2: NewMessageFromProfile(esql, myId, id); break;
+                                                case 3: view = false; break;
+                                                default: System.out.println("Invalid choice!"); break;
+                                        }
+
+                                }
+				else{
+                                        System.out.println("\n\nPROFILE VIEW\tlevel = " + conn_level + "\n");
+                                        System.out.println("Personal Info:\n----------------");
+                                        query = String.format("SELECT userId,name FROM USR WHERE userId = '%s'", id);
+                                        esql.executeQueryAndPrintResult(query);
+                                        System.out.println("\nEducation Details:\n----------------");
+                                        query = String.format("SELECT institutionName,major,degree,startdate,enddate FROM EDUCATIONAL_DETAILS WHERE userId = '%s'",id);
+                                        esql.executeQueryAndPrintResult(query);
+                                        System.out.println("\nWork Experienc:\n----------------");
+                                        query = String.format("SELECT company,role,location,startDate,endDate FROM WORK_EXPR WHERE userId = '%s'",id);
+                                        esql.executeQueryAndPrintResult(query);
+					
+					query = String.format("SELECT COUNT(*) FROM CONNECTION_USR WHERE (userId = '%s' OR connectionId = '%s') AND status = 'Accept'", myId, myId);
+
+
+					List<List<String>> num = esql.executeQueryAndReturnResult(query);
+               			        num_friends = Integer.parseInt(num.get(0).get(0)) ;
+					System.out.println("\n\tOPTIONS:\n\t-------");
+                                        System.out.println("1. View Friends list\n2. Send Message\n3. Send Connection request\n4. Back");
+                                        switch(readChoice()){
+                                                case 1: FriendList(esql, id, myId); break;
+                                                case 2: NewMessageFromProfile(esql, myId, id); break;
+                                                case 3:
+                                                        System.out.println("\n\nnumber of friends: " + num_friends);
+                                                        if(num_friends < 5)
+                                                                SendRequest(esql, myId);
+                                                        else
+                                                                System.out.println("You must add through your Friend's list");
+                                                        break;
+                                                case 4: view = false; break;
+                                                default: System.out.println("Invalid choice!"); break;
+                                        }
+
+                                }
+                        }
+                        conn_level--;	
+
+		}
+		catch(Exception e){
+			System.err.println(e.getMessage());
+        	}
+
+	}
+
+
+
+
 
     public static void UpdateProfile(ProfNetwork esql){
         //TODO: ALLOW USER TO CHANGE NON IMPORTANT PROFILE DETAILS
@@ -640,6 +723,7 @@ public class ProfNetwork {
 		//if connection status is in connection table and status=Reject
 		if (queryFound>0){
 			query = String.format("UPDATE CONNECTION_USR SET status = 'Request' WHERE userId = '%s' AND connectionId = '%s'", myId, conn_id);
+			esql.executeUpdate(query);
 			System.out.println("\tConnection Request Sent to " + conn_id);
 		}
 		else{
@@ -659,14 +743,44 @@ public class ProfNetwork {
         	System.err.println (e.getMessage ());
 	}      
     }
-    public static void SearchPeople(ProfNetwork esql){
+    public static void SearchPeople(ProfNetwork esql, String myId){
 	try{
-		System.out.print("\tEnter a name to search: ");
-	  	String name = in.readLine();
-	  	String percent = "%";
-		String userName = String.format("%s%s%s", percent, name, percent);
-		String query = String.format("SELECT userId,name FROM USR WHERE name LIKE '%s'", userName);
-       	  	esql.executeQueryAndPrintResult(query);
+		boolean search = true;
+		while(search){
+			System.out.print("\tEnter a name to search: ");
+	  		String name = in.readLine();
+	  		String percent = "%";
+			String userName = String.format("%s%s%s", percent, name, percent);
+			String query = String.format("SELECT userId,name FROM USR WHERE name LIKE '%s'", userName);
+       	  		int num_ppl = esql.executeQueryAndPrintResult(query);
+			if(num_ppl>0){
+				System.out.println("\nWould you like to view a Profile?");
+				System.out.println("OPTIONS:--------\n1. Yes\n2. No");
+				switch(readChoice()){
+					case 1: 
+						System.out.print("\tPlease enter userId: ");
+						String id = in.readLine();
+						//ViewProfile(esql, id, myId);
+						viewProfileFromSearch(esql, id, myId);
+						break;
+					case 2: search = false; break;
+					default: System.out.println("Invalid input!"); break;
+				}
+			}
+			else{
+				System.out.println("No results found");
+				search = false;
+			}
+			System.out.println("\nWould you like to search again?");
+                        System.out.println("OPTIONS:--------\n1. Yes\n2. No");
+			switch(readChoice()){
+                        	case 1:
+                      			search = true;
+                                        break;
+                                case 2: search = false; break;
+                                default: System.out.println("Invalid input!"); break;
+                        }
+		}
 	} 
 	catch(Exception e){
          	System.err.println (e.getMessage ());
@@ -679,7 +793,7 @@ public class ProfNetwork {
                         String newPass = in.readLine();
 
                         String query = String.format("UPDATE USR SET password = '%s' WHERE userId = '%s'", newPass,authorizedUser);
-			esql.executeQuery(query);
+			esql.executeUpdate(query);
 			System.out.println("Password Updated!");
                 }
                 catch(Exception e){
@@ -689,26 +803,30 @@ public class ProfNetwork {
 
 	public static void ViewRequests(ProfNetwork esql, String myId){
     	try{
-			String query = String.format("SELECT userId, status FROM CONNECTION_USR WHERE (connectionId = '%s') AND status = 'Request'", myId, myId);
+			String query = String.format("SELECT userId, status FROM CONNECTION_USR WHERE (connectionId = '%s') AND status = 'Request'", myId);
 			int numRequests = esql.executeQueryAndPrintResult(query);
 			if(numRequests > 0){
-				System.out.print("\nWould you like to Accept or Reject a request? [A]ccept, [R]eject, e[X]it: ");
-				String input = in.readLine();
+				System.out.print("\nWould you like to Accept or Reject a request? \n1. Accept\n2. Reject\n3. exit\n");
+				//String input = in.readLine();
 				String id;
-				if(input.equals("A")){
+				switch(readChoice()){
+				case 1:
 					System.out.print("Please enter the user ID you'd like to connect with: ");
 					id = in.readLine();
 					query = String.format("UPDATE CONNECTION_USR SET status = 'Accept' WHERE userId = '%s' AND connectionId = '%s'", id, myId);
-					esql.executeQuery(query);
+					esql.executeUpdate(query);
 					System.out.println("\n\tConnection Accepted!");	
-					num_friends++;		
-				}
-				else if(input.equals("R")){
+					num_friends++;
+					break;		
+				case 2:
 			                System.out.print("Please enter the user ID whose request you'd like to reject: ");
 			                id = in.readLine();
 			                query = String.format("UPDATE CONNECTION_USR SET status = 'Reject' WHERE userId = '%s' AND connectionId = '%s'", id, myId);  
-			                esql.executeQuery(query);
-			                System.out.println("\n\tConnection Rejected!");         
+			                esql.executeUpdate(query);
+			                System.out.println("\n\tConnection Rejected!");
+					break;         
+				default: System.out.println("Invalid choice!"); break;
+
             			}
 			}
 			else{
@@ -734,20 +852,25 @@ public class ProfNetwork {
 			String delete_choice;
 			while(view){
 				String query = String.format("SELECT msgId,receiverId,senderId, deleteStatus FROM MESSAGE WHERE (receiverId = '%s' AND (deleteStatus != 2 AND deleteStatus != 0)) OR (senderId = '%s' AND (deleteStatus != 0 AND deleteStatus != 1))", userid.trim(), userid);			
-				esql.executeQueryAndPrintResult(query);
-				System.out.println("\nWould you like to open a message?");
-				System.out.println("OPTIONS:\n--------");
-				System.out.println("1. Open a message\n2. Back to menu");
-				//System.out.print("\tChoose: ");
-				switch(readChoice()){
-					case 1: System.out.print("Please enter msgId: ");
-							String message_id = in.readLine();
-							OpenMessage(esql, userid, message_id);
-							break;
-					case 2: view = false; break;
-					default: System.out.println("Invalid choice!"); break;
-				}			
-
+				int num_msg = esql.executeQueryAndPrintResult(query);
+				if(num_msg > 0){
+					System.out.println("\nWould you like to open a message?");
+					System.out.println("OPTIONS:\n--------");
+					System.out.println("1. Open a message\n2. Back to menu");
+					//System.out.print("\tChoose: ");
+					switch(readChoice()){
+						case 1: System.out.print("Please enter msgId: ");
+								String message_id = in.readLine();
+								OpenMessage(esql, userid, message_id);
+								break;
+						case 2: view = false; break;
+						default: System.out.println("Invalid choice!"); break;
+					}			
+				}
+				else{ 
+					System.out.println("You have no messages!"); 
+					view=false;
+				}
 			}
 			
 	}
@@ -763,7 +886,7 @@ public class ProfNetwork {
 			//checks if i'm the sender of the message
 			query = String.format("SELECT * FROM MESSAGE WHERE msgId = '%s' AND senderId = '%s'", message_id, userid);
 			int isSender = esql.executeQuery(query);
-			System.out.println("isSender = " + isSender);
+			//System.out.println("isSender = " + isSender);
 			
             System.out.println("\nOPTIONS:\n1. Delete this message\n2. Go back to Inbox");
             switch(readChoice()){
@@ -772,7 +895,7 @@ public class ProfNetwork {
 						query = String.format("UPDATE MESSAGE SET deleteStatus = 1 WHERE msgId = '%s'", message_id);
 					else
 						query = String.format("UPDATE MESSAGE SET deleteStatus = 2 WHERE msgId = '%s'", message_id);
-					esql.executeQuery(query);
+					esql.executeUpdate(query);
 					System.out.println("Message deleted!");
 					break;
                 case 2: break;
