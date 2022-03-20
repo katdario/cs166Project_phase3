@@ -494,7 +494,7 @@ public class ProfNetwork {
 					System.out.println("1. View Friends list\n2. Send Message\n3. Back");
 					switch(readChoice()){
 						case 1: FriendList(esql, id, myId); break;
-						case 2: break;
+						case 2: NewMessageFromProfile(esql, myId, id); break;
 						case 3: view = false; break;
 						default: System.out.println("Invalid choice!"); break;
 					}
@@ -523,7 +523,7 @@ public class ProfNetwork {
                                        	System.out.println("1. View Friends list\n2. Send Message\n3. Send Connection request\n4. Back");
 					switch(readChoice()){
                                                	case 1: FriendList(esql, id, myId); break;
-                                               	case 2: break;
+                                               	case 2: NewMessageFromProfile(esql, myId, id); break;
                                                	case 3:
 							System.out.println("\n\nnumber of friends: " + num_friends); 
 							if(num_friends < 5 || (num_friends >= 5 && conn_level <=3))
@@ -592,6 +592,39 @@ public class ProfNetwork {
          System.err.println (e.getMessage ());
       }              
     }
+
+
+
+    public static void NewMessageFromProfile(ProfNetwork esql, String userlogin, String rec_id){
+        try{
+                //System.out.print("\tWho would you like to message?\n\tEnter receiver's user id: ");
+                //String rec_id = in.readLine();
+		System.out.print("\tEnter your message here: \n\t");
+                String msg_content = in.readLine();
+                System.out.print("\tWould you like to send now? Y/N: ");
+                String want_send = in.readLine();
+                String query;
+                String del_stat = "3";
+                String deliv_stat = "Delivered";
+                String draft_stat = "Draft";
+                if(want_send.equals("Y")){
+                        System.out.println("\tSending message ...");
+                        query = String.format("INSERT INTO MESSAGE ( senderId, receiverId,contents, sendTime, deleteStatus, status) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", userlogin, rec_id, msg_content.trim(), new Timestamp(System.currentTimeMillis()) , del_stat, deliv_stat);
+                }
+                else{
+                        System.out.println("\tSaving message as Draft");
+                        query = String.format("INSERT INTO MESSAGE ( senderId, receiverId, contents, sendTime, deleteStatus, status) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", userlogin, rec_id, msg_content.trim(), new Timestamp(System.currentTimeMillis()), del_stat, draft_stat );
+                }
+		esql.executeUpdate(query);
+                System.out.println("Sent!");
+        }
+
+        catch(Exception e){
+        	System.err.println (e.getMessage ());
+      	}
+}
+
+
 
 // connection status:
 // 	Accept = userid and connectionid are already connected
